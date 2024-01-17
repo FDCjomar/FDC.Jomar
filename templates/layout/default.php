@@ -29,21 +29,28 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
 
+    <?= $this->Html->script('https://code.jquery.com/jquery-3.6.4.min.js') ?>
+    <?= $this->Html->script('https://code.jquery.com/ui/1.12.1/jquery-ui.min.js') ?>
+    <?= $this->Html->css('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css') ?>
+
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+
 </head>
 <body>
     <nav class="top-nav">
         <div class="top-nav-title">
         <?php if (isset($user)): ?>
-            <a href="<?= $this->Url->build('/') ?>"><span><?php echo h($user->name); ?></span></a>
+            <a href="<?= $this->Url->build('/Profiles') ?>"><span><?php echo h($user->name); ?></span></a>
         <?php endif; ?>
         </div>
         <div class="top-nav-links">
+            <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Account</a>
             <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Login</a>
             <a rel="noopener" href="<?= $this->Url->Build('users/add') ?>">Register</a>
             <a rel="noopener" href="<?= $this->Url->Build('users/logout') ?>">Logout</a>
+            
         </div>
     </nav>
     <main class="main">

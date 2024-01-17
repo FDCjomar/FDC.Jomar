@@ -22,6 +22,9 @@
     <div class="column column-80">
         <div class="users form content">
         <div class="error-messages">
+            
+            <div id="validation-errors-container"></div>
+
             <?php foreach ($user->getErrors() as $field => $errors): ?>
                 <?php foreach ($errors as $error): ?>
                     <div class="error-message"><?= $error ?></div>
@@ -45,6 +48,6 @@
 </div>
 <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js') ?>
 <script>
-   
+
 </script>
 

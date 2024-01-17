@@ -81,4 +81,8 @@ class PagesController extends AppController
     public function thankYou(){
         $this->render('thankYou');
     }
+
+    public function showProfile(){
+        $this->render('showProfile');
+    }
 }

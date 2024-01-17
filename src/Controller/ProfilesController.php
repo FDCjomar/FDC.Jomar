@@ -10,6 +10,11 @@ namespace App\Controller;
  */
 class ProfilesController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
+    }
     /**
      * Index method
      *
@@ -17,11 +22,13 @@ class ProfilesController extends AppController
      */
     public function index()
     {
-        $query = $this->Profiles->find()
-            ->contain(['Users']);
-        $profiles = $this->paginate($query);
+        $user = $this->Authentication->getIdentity();
+        $this->render('index');
+        // $query = $this->Profiles->find()
+        //     ->contain(['Users']);
+        // $profiles = $this->paginate($query);
 
-        $this->set(compact('profiles'));
+        // $this->set(compact('profiles'));
     }
 
     /**
@@ -65,20 +72,9 @@ class ProfilesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit()
     {
-        $profile = $this->Profiles->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $profile = $this->Profiles->patchEntity($profile, $this->request->getData());
-            if ($this->Profiles->save($profile)) {
-                $this->Flash->success(__('The profile has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The profile could not be saved. Please, try again.'));
-        }
-        $users = $this->Profiles->Users->find('list', limit: 200)->all();
-        $this->set(compact('profile', 'users'));
+        $this->render('edit');
     }
 
     /**
@@ -100,4 +96,5 @@ class ProfilesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
 }
