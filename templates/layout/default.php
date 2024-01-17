@@ -41,16 +41,19 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <body>
     <nav class="top-nav">
         <div class="top-nav-title">
-        <?php if (isset($user)): ?>
-            <a href="<?= $this->Url->build('/Profiles') ?>"><span><?php echo h($user->name); ?></span></a>
+        <?php if (isset($checkAuth)): ?>
+            <a href="<?= $this->Url->build('/Profiles') ?>"><span><?php echo h($checkAuth->name); ?></span></a>
         <?php endif; ?>
         </div>
         <div class="top-nav-links">
-            <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Account</a>
-            <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Login</a>
-            <a rel="noopener" href="<?= $this->Url->Build('users/add') ?>">Register</a>
-            <a rel="noopener" href="<?= $this->Url->Build('users/logout') ?>">Logout</a>
-            
+            <?php if (!isset($checkAuth)): ?>
+                <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Login</a>
+                <a rel="noopener" href="<?= $this->Url->Build('users/add') ?>">Register</a>
+            <?php else: ?>
+                <a rel="noopener" href="<?= $this->Url->Build('users/login') ?>">Account</a>
+                <a rel="noopener" href="<?= $this->Url->Build('/Profiles') ?>">Profile</a>
+                <a rel="noopener" href="<?= $this->Url->Build('users/logout') ?>">Logout</a>
+            <?php endif; ?>
         </div>
     </nav>
     <main class="main">

@@ -31,6 +31,10 @@ class User extends Entity
         'name' => true,
         'email' => true,
         'password' => true,
+        'gender' => true,
+        'birthdate' => true,
+        'hobby' => true,
+        'profile_img' => true,
         'created' => true,
         'modified' => true,
     ];

@@ -70,7 +70,13 @@ class UsersTable extends Table
                     return isset($context['data']['password']) && $value === $context['data']['password'];
                 },
                 'message' => 'Passwords do not match.',
+            ])
+            ->notEmptyFile('file')
+            ->uploadedFile('file', [
+                'types' => ['image/jpeg', 'image/png', 'image/gif'],
+                'message' => 'Please upload only images (jpeg, png, gif)'
             ]);
+            
 
 
         return $validator;

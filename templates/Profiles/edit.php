@@ -1,20 +1,23 @@
 <?php echo $this->Html->css('profile', ['block' => 'css']); ?>
-
 <section>
     <div class="header-page"><h1>Edit User Profile</h1></div>
     
     <div class="row">
         <div class="column">
-        <?php $imageUrl = $this->Url->image('default-pic.png', ['fullBase' => true]); ?>
+        <?php if (isset($user->profile_img)): ?>
+        <?php $imageUrl = $this->Url->image('uploads/' . $user->profile_img, ['fullBase' => true]); ?>
         <?= $this->Html->image($imageUrl, ['alt' => 'User Profile Image']) ?>
+        <?php else: ?>
+            <?php $imageUrl = $this->Url->image('default-pic.png', ['fullBase' => true]); ?>
+            <?= $this->Html->image($imageUrl, ['alt' => 'User Profile Image']) ?>
+        <?php endif;?>
         </div>
-        
+       <?= $this->Form->create($user, array('role'=>'form','type'=>'file')) ?> 
         <div class="column user-data">
-            <?= $this->Form->label('profile_img', 'Profile Image') ?>
-            <?= $this->Form->file('profile_img') ?>
+            <?= $this->Form->label('profile_img_file', 'Profile Image') ?>
+            <?= $this->Form->input('profile_img_file', ['type' => 'file']) ?>
         </div>
     </div>
-    
     <div class="row">
         
         <fieldset>
@@ -25,9 +28,11 @@
             <?= $this->Form->label('hobby', 'Hubby') ?>
             <?= $this->Form->textarea('hobby', ['rows' => '10', 'cols' => '50'])?>
        </fieldset>
+   
     </div>
     <div class="row">
-        <a href="">Edit Profile</a>
+    <?= $this->Form->button(__('Update'))?>
+    <?= $this->Form->end() ?>
     </div>
 </section>
 <script>

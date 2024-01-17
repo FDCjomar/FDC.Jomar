@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use App\Model\Table\UsersTable;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Text;
 
 /**
  * Profiles Controller
@@ -10,25 +13,29 @@ namespace App\Controller;
  */
 class ProfilesController extends AppController
 {
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public $components = ['Authentication.Authentication'];
+    public function initialize(): void
     {
-        parent::beforeFilter($event);
-        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
-    }
+        parent::initialize();
+        $this->loadComponent('Authentication.Authentication');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+    }   
     /**
      * Index method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
+    
     public function index()
     {
-        $user = $this->Authentication->getIdentity();
-        $this->render('index');
+        
+        $authUser = $this->Authentication->getIdentity();
+        $user = $this->Users->get($authUser->id);
         // $query = $this->Profiles->find()
         //     ->contain(['Users']);
         // $profiles = $this->paginate($query);
 
-        // $this->set(compact('profiles'));
+        $this->set(compact('user'));
     }
 
     /**
@@ -38,11 +45,7 @@ class ProfilesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $profile = $this->Profiles->get($id, contain: ['Users']);
-        $this->set(compact('profile'));
-    }
+    
 
     /**
      * Add method
@@ -74,7 +77,32 @@ class ProfilesController extends AppController
      */
     public function edit()
     {
-        $this->render('edit');
+         // Get the currently logged-in user
+         $authUser = $this->Authentication->getIdentity();
+         $user = $this->Users->get($authUser->id);
+         $this->set(compact('user'));
+         if ($this->request->is(['patch', 'post', 'put'])) {
+             $user = $this->Users->patchEntity($user, $this->request->getData());
+            
+             if ($this->Users->save($user)) {
+                $file = $this->request->getData('profile_img_file');
+                $fileName = Text::uuid();
+                $fileName = $fileName . "." . $file->getClientFileName();
+                $file->moveTo(WWW_ROOT . 'img/uploads' . DS . $fileName);
+
+                
+                // Update the file name in the database
+                $user->profile_img = $fileName;
+                $this->Users->save($user); // Update the entity with the file name
+
+                $this->Flash->success(__('Your profile has been updated.'));
+ 
+                 return $this->redirect(['action' => 'index']);
+             }
+             $this->Flash->error(__('Your profile could not be updated. Please, try again.'));
+         }
+ 
+         
     }
 
     /**

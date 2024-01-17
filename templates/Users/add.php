@@ -24,7 +24,6 @@
         <div class="error-messages">
             
             <div id="validation-errors-container"></div>
-
             <?php foreach ($user->getErrors() as $field => $errors): ?>
                 <?php foreach ($errors as $error): ?>
                     <div class="error-message"><?= $error ?></div>

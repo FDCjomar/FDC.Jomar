@@ -49,7 +49,18 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
-        $this->loadComponent('Authentication.Authentication');
+        $this->loadComponent('Authentication.Authentication', [
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login',
+            ],
+            'loginRedirect' => [
+                'controller' => 'Users',
+                'action' => 'dashboard',
+            ],
+            'logoutRedirect' => '/users/login',
+        ]);
+
     }
     public function beforeFilter(\Cake\Event\EventInterface $event)
 {
@@ -58,9 +69,9 @@ class AppController extends Controller
     // actions public, skipping the authentication check
     $this->Authentication->addUnauthenticatedActions(['index', 'view']);
     // Get authenticated user information
-    $user = $this->Authentication->getIdentity();
+    $checkAuth = $this->Authentication->getIdentity();
 
     // Set user data for use in layout
-    $this->set(compact('user'));
+    $this->set(compact('checkAuth'));
 }
 }
